@@ -5,5 +5,5 @@
     define('DB_NAME', 'ikk');
 
     define('APPROOT', dirname(__FILE__, 2));
-    define('URLROOT', 'http://localhost/workspace/majsterchef');
+    define('URLROOT', 'http://localhost/workspace/ikk');
     define('SITENAME', 'Internetowa Książka Kucharska');
