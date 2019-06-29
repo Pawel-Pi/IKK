@@ -1,7 +1,5 @@
 <?php
     /*
-    * App core class
-    * Creates URLs and loads core controller
     * URL format - /controller/method/params
     */
 
@@ -12,14 +10,10 @@
         private $fileLoaded = false;
 
         public function __construct() {
-            //odczytanie kontrolera
+            //get controller name
             $url = $this->getUrl();
 
-            //odczytanie parametrów
-            //jeśli parametry istnieją to zostaną przypisanie, jeśli nie to pusta tablica
-            //rozumiec to tak: IF $url THEN array_values ELSE []
-            //if($url) oznacza - czy tablica $url ma wartości? 
-            //(isset zwróci true nawet jak pusta tablica jest zainicjowana)
+            //get parameters
             $this->params = $url ? array_values($url) : [];
 
             //$url[0] - controller requested by POST
@@ -37,7 +31,7 @@
                 require_once '../app/controllers/Pages.php';
             }
 
-            //wywołanie funkcji z parametrami z tablicy
+            //call function with parameters from the URL
             call_user_func_array([new $this->currentController, $this->currentMethod],
                 $this->params);
         }
@@ -46,7 +40,7 @@
             if(isset($_GET['url'])) {
                 $url = rtrim($_GET['url'], '/');
                 $url = filter_var($url, FILTER_SANITIZE_URL);
-                $url = explode('/', $url); //tworzy tablicę
+                $url = explode('/', $url); //creates array
                 return $url;
             }
         }

@@ -6,7 +6,7 @@
         
         public function model($model) {
             require_once '../app/models/'.$model.'.php';
-            return new $model(); // zwraca utworzony obiekt $model
+            return new $model();
         }
 
         public function view($view, $data = []) {
