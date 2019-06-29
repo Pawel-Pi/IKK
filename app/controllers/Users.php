@@ -76,7 +76,7 @@
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         $data = [
           'email' => trim($_POST['email']),
-          'password' => trim($_POST['[password']),
+          'password' => trim($_POST['password']),
           'email_err' => '',
           'password_err' => ''
         ];
