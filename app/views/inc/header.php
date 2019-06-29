@@ -10,13 +10,18 @@
     <title><?php echo SITENAME; ?></title>
 </head>
 <body>
- <header id="header">
-   <div class="container">
-     <h1><?php echo SITENAME; ?></h1>
-     <a href="<?php echo URLROOT.'/users/register'; ?>">Rejestracja</a> 
-     <a href="<?php echo URLROOT.'/users/login'; ?>">Logowanie</a>
-   </div>
- </header>
+  <header id="header">
+    <div class="container">
+      <h1><?php echo SITENAME; ?></h1>
+      <?php if(isset($_SESSION['user_id'])): ?>
+        <a href="<?php echo URLROOT.'/users/logout'; ?>">Wyloguj</a>
+        <a href="#">Zalogowany jako: <?php echo $_SESSION['user_login']; ?></a>
+      <?php else: ?>   
+        <a href="<?php echo URLROOT.'/users/register'; ?>">Rejestracja</a> 
+        <a href="<?php echo URLROOT.'/users/login'; ?>">Logowanie</a>
+      <?php endif; ?>
+    </div>
+  </header>
  <?php include_once APPROOT.'/views/inc/navbar.php'; ?>
  
  

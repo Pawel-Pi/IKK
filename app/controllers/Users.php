@@ -1,5 +1,6 @@
 <?php
   class Users extends Controller {
+    private $user;
 
     public function __construct() {
       $this->userModel = $this->model('User');
@@ -22,10 +23,14 @@
 
         if(empty($data['login'])) {
           $data['login_err'] = 'Podaj login';
+        } elseif($this->userModel->isLoginRegistered($data['login'])) {
+          $data['login_err'] = 'Podany login jest zajęty';
         }
 
         if(empty($data['email'])) {
           $data['email_err'] = 'Podaj email';
+        } elseif($this->userModel->isEmailRegistered($data['email'])) {
+          $data['email_err'] = 'Podany adres email jest już zarejestrowany';
         }
 
         if(empty($data['password'])) {
@@ -80,17 +85,31 @@
           'email_err' => '',
           'password_err' => ''
         ];
-
-        if(empty($data['email'])) {
-          $data['email_err'] = 'Podaj email.';
-        }
-
+        
         if(empty($data['password'])) {
           $data['password_err'] = 'Podaj hasło';
-        } elseif (!empty($data['login'] && checkPassword($data['login'], $data['password']) == false)) {
-          $data['password_err'] = 'Podano złe hasło.';
+        } elseif (!empty($data['email'] && $this->userModel->isPasswordValid($data['email'], $data['password']) == false)) {
+          $data['password_err'] = 'Podano złe hasło';
         }
 
+        if(empty($data['email'])) {
+          $data['email_err'] = 'Podaj email';
+        } elseif(!$this->userModel->isEmailRegistered($data['email'])) {
+          $data['email_err'] = 'Podany email nie jest zarejestrowany';
+          $data['password_err'] = 'Najpierw podaj prawidłowy email';
+        }
+
+        if(empty($data['email_err']) && empty($data['password_err'])) {
+          $_SESSION['user_id'] = $this->userModel->getUserInfoByEmail($data['email'])->id ?: '';
+          $_SESSION['user_login'] = $this->userModel->getUserInfoByEmail($data['email'])->login ?: '';
+          if($_SESSION['user_id'] == '' || $_SESSION['user_login'] == '') {
+            exit('Can\'t fetch user info from the database');
+          }
+          $_SESSION['user_email'] = $data['email'];
+          redirect('pages/recipes');
+        } else {
+          $this->view('users/login', $data);
+        }
 
       } else {
         //display login form
@@ -102,5 +121,13 @@
         ];
         $this->view('users/login', $data);
       }
+    }
+
+    public function logout() {
+      unset($_SESSION['user_id']);
+      unset($_SESSION['user_login']);
+      unset($_SESSION['user_email']);
+      session_destroy();
+      redirect('');
     }
   }
