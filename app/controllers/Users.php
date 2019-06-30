@@ -106,7 +106,7 @@
             exit('Can\'t fetch user info from the database');
           }
           $_SESSION['user_email'] = $data['email'];
-          redirect('pages/recipes');
+          redirect('recipes');
         } else {
           $this->view('users/login', $data);
         }
